@@ -1,5 +1,4 @@
-//import stdlib.*;
-//import StdRandom;
+import java.util.Random;
 
 public class PercolationStats {
   
@@ -22,7 +21,7 @@ public class PercolationStats {
      Percolation obj = new Percolation(gridSize);
      while(!obj.percolates())
      {
-       obj.open(StdRandom.uniform(gridSize) + 1, StdRandom.uniform(gridSize) + 1);
+       obj.open(new Random().nextInt(gridSize) + 1, new Random().nextInt(gridSize) + 1);
      }
 //     obj.display();
      return obj.count;
@@ -36,12 +35,19 @@ public class PercolationStats {
    
    public double mean()                     // sample mean of percolation threshold
    {
-     return StdStats.mean(results);
+       Integer sum = 0;
+       for(int result : results)
+           sum += result;
+     return sum/noOfTests;
    }
    
    public double stddev()                   // sample sPercolationStatsimport tandard deviation of percolation threshold
    {
-     return StdStats.stddev(results);
+       double mean = mean();
+       double stddev = 0;
+       for(int result : results)
+           stddev += Math.pow(result - mean, 2);
+     return Math.sqrt(stddev);
    }
    
    public double confidenceLo()             // returns lower bound of the 95% confidence interval
@@ -62,9 +68,9 @@ public class PercolationStats {
      
      public static void main(String[] args)   // test client, described below
    {
-     //PercolationStats pobj = new PercolationStats( Integer.parseInt(args[0]), Integer.parseInt(args[1]));
-     PercolationStats pobj = new PercolationStats(4,40);
-         System.out.println("mean                    = " + pobj.mean());
+     PercolationStats pobj = new PercolationStats( Integer.parseInt(args[0]), Integer.parseInt(args[1]));
+     //PercolationStats pobj = new PercolationStats(5,3);
+         System.out.println("mean                    = " + pobj.mean()/Integer.parseInt(args[0]) / Integer.parseInt(args[0]));
      System.out.println("stddev                  = " + pobj.stddev());
      System.out.println("95% confidence interval = " + pobj.confidenceLo() + ", " + pobj.confidenceHi());
    }
